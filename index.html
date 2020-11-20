@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="author" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+
+<body>
+    <script>
+        // Create an instance.
+        const controller = new AbortController()
+        const signal = controller.signal
+
+        /*
+        // Register a listenr.
+        signal.addEventListener("abort", () => {
+            console.log("aborted!")
+        })
+        */
+
+
+        function beginFetching() {
+            console.log('Now fetching');
+            var urlToFetch = 'http://localhost:5000/WeatherForecast/100000';
+
+            fetch(urlToFetch, {
+                    method: 'get',
+                    signal: signal,
+                })
+                .then(function (response) {
+                    console.log(`Fetch complete. (Not aborted)`);
+                    console.log(response.json());
+                }).catch(function (err) {
+                    console.error(` Err: ${err}`);
+                });
+        }
+
+
+        function abortFetching() {
+            console.log('Now aborting');
+            // Abort.
+            controller.abort()
+        }
+
+    </script>
+
+
+
+    <h1>Example of fetch abort</h1>
+    <hr>
+    <button onclick="beginFetching();">
+        Begin
+    </button>
+    <button onclick="abortFetching();">
+        Abort
+    </button>
+</body>
+
+</html>
