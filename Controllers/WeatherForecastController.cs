@@ -28,13 +28,29 @@ namespace CancelingRequestApi.Controllers
         [HttpGet("{delayMilliseconds:int}")]
         public async Task<IEnumerable<WeatherForecast>> Get(CancellationToken cancellationToken, int delayMilliseconds)
         {
+
             _logger.LogInformation("Request started.");
             Stopwatch sw = new Stopwatch();
             sw.Restart();
-            await Task.Delay(delayMilliseconds, cancellationToken);
+
+
+            await Task.Delay(4000);
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+
+            //long operation
+            await Task.Delay(delayMilliseconds);
+
+
             sw.Stop();
             _logger.LogInformation($"Canceled after {sw.ElapsedMilliseconds}ms.");
-            cancellationToken.ThrowIfCancellationRequested();
 
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
